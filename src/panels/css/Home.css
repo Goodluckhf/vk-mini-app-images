@@ -1,0 +1,21 @@
+.Tabbar {
+    position: fixed;
+    bottom: 0;
+    max-width: 100%;
+    min-width: 100%;
+}
+
+.MainPhoto {
+    width: 100px;
+    transition: 0.2s;
+    border-radius: 8px;
+    margin: 2.5px;
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    .MainPhoto:hover {
+        opacity: 0.8;
+        scale: 0.98;
+    }
+}
