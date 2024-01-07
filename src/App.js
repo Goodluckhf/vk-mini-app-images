@@ -19,11 +19,10 @@ const App = () => {
 	const [activePhoto, setActivePhoto] = useState(null) // Текущий выбранный шаблон для редактирования
 	const [ava, setAva] = useState(null) // Автарка пользователя для обработки 
 
-
 	async function fetchData() {
 		const user = await bridge.send('VKWebAppGetUserInfo'); // Инициализация пользователя
 		const fetchedFolders = await api.getFolders(user.sex) // Получаем папки
-		user.data = await api.getUser() // Получаем лимит 
+		user.data = await api.getUser(user.id) // Получаем лимит 
 		setFolders(fetchedFolders);
 		setUser(user);
 		setPopout(null);

@@ -10,8 +10,8 @@ export async function getToken(scope) {
 
 export async function wallPost (text, photo) {
     try {
+
         const token = await getToken('photos')
-    
         const albums = await bridge.send('VKWebAppCallAPIMethod', {
             method: 'photos.getAlbums',
             params: {
@@ -38,34 +38,27 @@ export async function wallPost (text, photo) {
                 v: '5.131',
                 access_token: token.access_token
         }})
-    
+        
         const photoResult = await api.uploadPhoto(photo, uploadServer.response.upload_url)
-    
-        // Production
-        /* 
-            let attachment = await bridge.send('VKWebAppCallAPIMethod', {
-                method: 'photos.save',
-                params: {
-                    album_id: album.id,
-                    server: photoResult.server,
-                    photos_list: photoResult.photos_list,
-                    hash: photoResult.hash,
-                    v: '5.131',
-                    access_token: token.access_token
-                }
-            })
-        */
-    
-        // DEMO
-        let attachment = {
-            id: 457239240,
-            ownerId: -212778967
-        }
-    
+        
+        let attachment = await bridge.send('VKWebAppCallAPIMethod', {
+            method: 'photos.save',
+            params: {
+                album_id: album.id,
+                server: photoResult.server,
+                photos_list: photoResult.photos_list,
+                hash: photoResult.hash,
+                v: '5.131',
+                access_token: token.access_token
+            }
+        })
+        
+        const photoAttachment = attachment.response[0]
         await bridge.send('VKWebAppShowWallPostBox', {
             message: text,
-            attachment: `photo${attachment.ownerId}_${attachment.id}`
+            attachment: `photo${photoAttachment.owner_id}_${photoAttachment.id}`
         })
+
     } catch (e) {
         console.error(e);
     }

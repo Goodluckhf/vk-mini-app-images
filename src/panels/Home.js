@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, HorizontalScroll, Panel, PanelHeader } from '@vkontakte/vkui';
 import Masonry from 'react-masonry-component';
 import { showAds } from "../utils/utils";
+import api from "../utils/api";
 
 const MAX_COUNT = 10 // Количество фото которые будут загркжены/подгружены
 
@@ -52,7 +53,7 @@ const Home = ({ id, go, user, folders, setActivePhoto, setAva }) => {
 				<img 
 					style={{ width: width + 'px'}}
 					className="MainPhoto"
-					src={`https://xx10.ru/photo/images/M/${activeFolder.path}/${photo.name}`}
+					src={api.getImage(photo.name)}
 				/>
 			</div>
 		}

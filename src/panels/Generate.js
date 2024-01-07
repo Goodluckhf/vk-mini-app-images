@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, Panel, ScreenSpinner, Spinner } from "@vkontakte/vkui";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useState from 'react-usestateref'
 import { Icon28Hearts2CircleFillTwilight, Icon28StoryCircleFillViolet, Icon201CircleFillGold } from "@vkontakte/icons"
 import { shareHistory, showAds, wallPost } from "../utils/utils";
 import bridge from "@vkontakte/vk-bridge";
@@ -8,13 +9,13 @@ import img1 from '../img/subscribe.png'
 
 function Subscribe({ setPanel, user, result}) {
     const [loading, setLoading] = useState(false)
-
-    const  getPoints = async () => {
+    const getPoints = async () => {
         let status = 0
         setLoading(true)
+        const groups = result.groupids
 
-        for (let i = 0; i < result.arr.length; i++) {
-            const group_id = result.arr[i];
+        for (let i = 0; i < groups.length; i++) {
+            const group_id = groups[i];
             try {
                 let data = await bridge.send('VKWebAppJoinGroup', {
                     group_id
@@ -24,9 +25,10 @@ function Subscribe({ setPanel, user, result}) {
                 console.error(e);
             }
         }
+
         setLoading(false)
         if (status) {
-            api.setUser()
+            api.setUser(user.id)
             setPanel("Share")
         }
     }
@@ -191,21 +193,38 @@ export default function Generate({ id, photo, go, ava, user }) {
     const [loading, setLoading] = useState(true)
     const [panel, setPanel] = useState(null)
     const [result, setResult] = useState(null)
-
     const ActivePanel = panels[panel]
 
     useEffect(() => {
-        const start = async () => {
-            try {
-                const result = await api.generate(ava, photo)
-                setResult(result);
-            } catch (e) {
-                go('get_image')
-                console.error(e);
+        const poll = async (id) => {
+            try{
+                bridge.send("VKWebAppInit");
+                const job = await api.getResult(id)
+                if(job == 'PENDING'){
+                    return setTimeout(poll, 3_000, id)
+                }
+    
+                const image = api.getImage(job.result)
+                setPanel('Subscribe')
+                setResult({...job, result: image});
+                setLoading(false)
             }
-            setPanel('Subscribe')
-            setLoading(false)
+            catch{
+                go('get_image')
+            }
         }
+
+        const start = async () => {
+            try{
+                const id = await api.generate(user.id, ava, photo)
+                poll(id)
+            }
+            catch(e){
+                go('get_image')
+                console.log(e)
+            }
+        }
+
         start()
     }, [])
 
