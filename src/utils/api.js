@@ -1,7 +1,10 @@
 import axios from 'axios'
 
 class API {
-    apiUrl = 'https://deciding-iguana-relaxed.ngrok-free.app'
+
+    baseURL = 'https://women-one-24.ru';
+    apiUrl = `${this.baseURL}/api`;
+    cdnUrl =  `${this.baseURL}`;
     
     constructor(){
         axios.defaults.baseURL = this.apiUrl
@@ -16,7 +19,7 @@ class API {
     }
 
     getImage(path){
-        return `${this.apiUrl}/face-swapper/image?path=${path}`
+        return `${this.cdnUrl}/${path}`
     }
     
     async getFolders(gen) {

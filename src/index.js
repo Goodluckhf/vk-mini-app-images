@@ -4,7 +4,7 @@ import bridge from "@vkontakte/vk-bridge";
 import App from "./App";
 
 window.process = {
-  APP_ID: 51825512, // ID приложения
+  APP_ID: 51816462, // ID приложения
   ALBUM: "Мой Образ", // Название альбома который будется создавться дл япубликации фото,
 }
 
