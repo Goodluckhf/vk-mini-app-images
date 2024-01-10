@@ -19,7 +19,7 @@ export async function wallPost (text, photo) {
                 access_token: token.access_token
         }})
     
-        const album = await albums.response.items.find(x => x.title === window.process.ALBUM)
+        let album = await albums.response.items.find(x => x.title === window.process.ALBUM)
         if (!album) {
             const data = await bridge.send('VKWebAppCallAPIMethod', {
                 method: 'photos.createAlbum',

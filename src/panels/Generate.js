@@ -95,7 +95,7 @@ function Share({ setPanel, result }) {
 
     const share = async () => {
         try {
-            await wallPost(result.textphoto , result.result)
+            await wallPost(result.textphoto , result.path)
             setPanel("History")
         } catch (e) {
             console.error(e);
@@ -207,7 +207,7 @@ export default function Generate({ id, photo, go, ava, user }) {
     
                 const image = api.getImage(job.result)
                 setPanel('Subscribe')
-                setResult({...job, result: image});
+                setResult({...job, path: job.result, result: image});
                 setLoading(false)
             }
             catch(e){

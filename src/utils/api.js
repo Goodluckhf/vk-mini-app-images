@@ -3,10 +3,10 @@ import {LimitError, UnknownError, FaceNotFound} from './exceptions'
 
 class API {
 
-    baseURL = 'https://deciding-iguana-relaxed.ngrok-free.app';
+    baseURL = 'https://women-one-24.ru';
     apiUrl = `${this.baseURL}/api`;
-    cdnUrl =  `${this.baseURL}/api/face-swapper/image`;
-    
+    cdnUrl =  `${this.baseURL}`;
+
     constructor(){
         axios.defaults.baseURL = this.apiUrl
         axios.interceptors.request.use(function (config) {
@@ -20,7 +20,7 @@ class API {
     }
 
     getImage(path){
-        return `${this.cdnUrl}?path=${path}`
+        return `${this.cdnUrl}/${path}`
     }
     
     async getFolders(gen) {
@@ -30,7 +30,7 @@ class API {
     }
 
     async getUser(id) {
-        const {data} = await axios.get(`/face-swapper/limits/${id}`, "GET")
+        const {data} = await axios.get(`/face-swapper/limits/${id}`)
         return data
     }
 
