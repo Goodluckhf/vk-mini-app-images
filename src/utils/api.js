@@ -1,10 +1,11 @@
 import axios from 'axios'
+import {LimitError, UnknownError, FaceNotFound} from './exceptions'
 
 class API {
 
-    baseURL = 'https://women-one-24.ru';
+    baseURL = 'https://deciding-iguana-relaxed.ngrok-free.app';
     apiUrl = `${this.baseURL}/api`;
-    cdnUrl =  `${this.baseURL}`;
+    cdnUrl =  `${this.baseURL}/api/face-swapper/image`;
     
     constructor(){
         axios.defaults.baseURL = this.apiUrl
@@ -19,7 +20,7 @@ class API {
     }
 
     getImage(path){
-        return `${this.cdnUrl}/${path}`
+        return `${this.cdnUrl}?path=${path}`
     }
     
     async getFolders(gen) {
@@ -43,17 +44,45 @@ class API {
     }
 
     async generate(id, img, photo) {
-        const form = new FormData()
-        form.set('id', id)
-        form.set('source', img, img.name)
-        form.set('target', photo.name)
-        const { data } = await axios.post('face-swapper', form)
-        return data.id
+        try{
+            const form = new FormData()
+            form.set('id', id)
+            form.set('source', img, img.name)
+            form.set('target', photo.name)
+            const { data } = await axios.post('face-swapper', form)
+            return data.id
+        }
+        catch(e){
+
+            const status = e.response.status
+            const error = e?.response.data.error
+            if(error && status == 403){
+                throw new LimitError()
+            }
+            else {
+                throw new UnknownError()
+            }
+        }
     }
 
     async getResult(id){
-        const {data} = await axios.get('face-swapper/result/'+id)
-        return data 
+        try{
+            const {data} = await axios.get('face-swapper/result/'+id)
+            return data
+        }
+        catch(e){
+            const status = e.response.status
+            const error = e?.response.data.error
+            if(error && status == 403){
+                throw new LimitError()
+            }
+            else if(error && status == 404){
+                throw new FaceNotFound()
+            }
+            else {
+                throw new UnknownError()
+            }
+        }
     }
 
 }

@@ -6,7 +6,8 @@ import { shareHistory, showAds, wallPost } from "../utils/utils";
 import bridge from "@vkontakte/vk-bridge";
 import api from "../utils/api";
 import img1 from '../img/subscribe.png'
-
+import ErrorPanel from "./Error";
+import {LimitError, FaceNotFound, UnknownError} from '../utils/exceptions'
 function Subscribe({ setPanel, user, result}) {
     const [loading, setLoading] = useState(false)
     const getPoints = async () => {
@@ -187,7 +188,7 @@ function Result({ result, setPanel, go}) {
     </div>
 }
 
-const panels = { Subscribe, Share, History, Result}
+const panels = { Subscribe, Share, History, Result, ErrorPanel}
 
 export default function Generate({ id, photo, go, ava, user }) {
     const [loading, setLoading] = useState(true)
@@ -198,8 +199,8 @@ export default function Generate({ id, photo, go, ava, user }) {
     useEffect(() => {
         const poll = async (id) => {
             try{
-                bridge.send("VKWebAppInit");
                 const job = await api.getResult(id)
+                    
                 if(job == 'PENDING'){
                     return setTimeout(poll, 3_000, id)
                 }
@@ -209,8 +210,13 @@ export default function Generate({ id, photo, go, ava, user }) {
                 setResult({...job, result: image});
                 setLoading(false)
             }
-            catch{
-                go('get_image')
+            catch(e){
+                if(e instanceof FaceNotFound){
+                    go('get_image')
+                }
+                else{
+                    go('error_panel')
+                }
             }
         }
 
@@ -220,15 +226,24 @@ export default function Generate({ id, photo, go, ava, user }) {
                 poll(id)
             }
             catch(e){
-                go('get_image')
-                console.log(e)
+                if(e instanceof LimitError){
+                    go('limit')
+                }
+                else {
+                    go('error_panel')
+                }
             }
         }
 
         start()
     }, [])
 
-    if (loading) return <ScreenSpinner />
+    if (loading) return <>
+     <div className="InitMenu">
+        <h1 class="loading-text" style={{ marginBottom: '200px'}}>Идет обработка... Пожалуйста, подождите</h1>
+        <ScreenSpinner/>
+     </div>
+    </>
 
     return <Panel id={id}>
         <ActivePanel setPanel={setPanel} result={result} user={user} go={go}/>

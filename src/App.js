@@ -10,6 +10,7 @@ import Limit from './panels/Limit';
 import Generate from './panels/Generate';
 import GetImage from './panels/GetImage';
 import ErrorBoundary from "./error-boundary";
+import ErrorPanel from './panels/Error';
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState('init');
@@ -59,6 +60,11 @@ const App = () => {
 									/>
 									<GetImage
 										id="get_image"
+										setAva={setAva}
+										go={go}
+									/>
+									<ErrorPanel
+										id="error_panel"
 										setAva={setAva}
 										go={go}
 									/>
