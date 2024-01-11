@@ -31,7 +31,7 @@ export default function Init({ id, go, fetchData }) {
         <div className='InitMenu'>
 
             <img src={img} alt='img'/>
-            <h1>Мой Образ</h1>
+            <h1>Уникальный Образ</h1>
 
             <Button 
                 size='l' 
