@@ -165,7 +165,7 @@ function Result({ result, setPanel, go}) {
     }
 
     return <div className="InitMenu">
-        <img src={result.result} style={{ width: '300px'}}/>
+        <img src={result.result} style={{ width: '250px'}}/>
         <h1>Ваш результат готов. Не забудьте показать результат друзьям.</h1>
 
         <Button 

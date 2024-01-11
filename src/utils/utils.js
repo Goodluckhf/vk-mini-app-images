@@ -1,5 +1,6 @@
 import bridge from "@vkontakte/vk-bridge";
 import api from "./api";
+import moment from "moment";
 
 export async function getToken(scope) {
     return await bridge.send('VKWebAppGetAuthToken', { 
@@ -80,7 +81,22 @@ export async function shareHistory (photo) {
     }
 }
 
+
+let lastAddTime = null
+function isAddAvailable() {
+    if (!lastAddTime) {
+        return true;
+    }
+
+    const availableAddTime = moment().subtract(30, 'second');
+    return availableAddTime.isAfter(lastAddTime);
+}
+
 export async function showAds(type) {
+    if (!isAddAvailable()) {
+        return;
+    }
+
     try {
         await bridge.send('VKWebAppShowNativeAds', {
             ad_format: type ? type : 'interstitial' /* Тип рекламы */
@@ -88,6 +104,6 @@ export async function showAds(type) {
     } catch (e) {
         console.error(e);
     }
-
+    lastAddTime = moment();
 }
 

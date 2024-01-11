@@ -19,7 +19,7 @@ export default function Limit({ id, user }) {
 
     return <Panel id={id} style={{ minHeight: '100vh'}}>
         <div className="InitMenu">
-            <img src={api.getImage(user.data.result)} style={{ width: "300px" }}/>
+            <img src={api.getImage(user.data.result)} style={{ width: "250px" }}/>
             <h1>К сожалению, на сегодня ваш лимит на образы исчерпан. Пожалуйста, заходите завтра</h1>
             <Button 
                 size="l"
