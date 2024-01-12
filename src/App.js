@@ -23,7 +23,7 @@ const App = () => {
 	async function fetchData() {
 		const user = await bridge.send('VKWebAppGetUserInfo'); // Инициализация пользователя
 		const fetchedFolders = await api.getFolders(user.sex) // Получаем папки
-		user.data = await api.getUser(user.id) // Получаем лимит 
+		user.data = await api.getUser() // Получаем лимит 
 		setFolders(fetchedFolders);
 		setUser(user);
 		setPopout(null);

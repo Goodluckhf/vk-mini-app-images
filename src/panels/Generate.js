@@ -29,7 +29,7 @@ function Subscribe({ setPanel, user, result}) {
 
         setLoading(false)
         if (status) {
-            api.setUser(user.id)
+            api.setUser()
             setPanel("Share")
         }
     }

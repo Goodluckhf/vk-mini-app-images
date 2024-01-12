@@ -29,13 +29,13 @@ class API {
         return data
     }
 
-    async getUser(id) {
-        const {data} = await axios.get(`/face-swapper/limits/${id}`)
+    async getUser() {
+        const {data} = await axios.get(`/face-swapper/limits`)
         return data
     }
 
-    async setUser(id) {
-        await axios.put(`/face-swapper/limits/${id}`)
+    async setUser() {
+        await axios.put(`/face-swapper/limits`)
     }
 
     async uploadPhoto(photo, uploadUrl) {
