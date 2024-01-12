@@ -157,7 +157,7 @@ function History({ setPanel, result }) {
 function Result({ result, setPanel, go}) {
     const share = async () => {
         try {
-            await wallPost(result.textphoto , result.result)
+            await wallPost(result.textphoto , result.path)
             setPanel("History")
         } catch (e) {
             console.error(e);
