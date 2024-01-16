@@ -43,10 +43,9 @@ class API {
         return data
     }
 
-    async generate(id, img, photo) {
+    async generate(img, photo) {
         try{
             const form = new FormData()
-            form.set('id', id)
             form.set('source', img, img.name)
             form.set('target', photo.name)
             const { data } = await axios.post('face-swapper', form)

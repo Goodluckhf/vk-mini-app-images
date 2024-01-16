@@ -222,7 +222,7 @@ export default function Generate({ id, photo, go, ava, user }) {
 
         const start = async () => {
             try{
-                const id = await api.generate(user.id, ava, photo)
+                const id = await api.generate(ava, photo)
                 poll(id)
             }
             catch(e){
