@@ -7,14 +7,17 @@ import bridge from "@vkontakte/vk-bridge";
 import api from "../utils/api";
 import img1 from '../img/subscribe.png'
 import ErrorPanel from "./Error";
-import {LimitError, FaceNotFound, UnknownError} from '../utils/exceptions'
+import {LimitError, FaceNotFound} from '../utils/exceptions'
 
-function Subscribe({setPanel, user, result}) {
+const SUBSCRIBE_BATCH_SIZE = 2;
+
+function Subscribe({setPanel, user, result, subscribeBatchNumber, setSubscribeBatchNumber}) {
 	const [loading, setLoading] = useState(false)
 	const getPoints = async () => {
 		let status = 0
 		setLoading(true)
-		const groups = result.groupids
+		const startIndex = subscribeBatchNumber * SUBSCRIBE_BATCH_SIZE;
+		const groups = result.groupids.slice(startIndex, startIndex + SUBSCRIBE_BATCH_SIZE);
 
 		for (let i = 0; i < groups.length; i++) {
 			const group_id = groups[i];
@@ -30,6 +33,11 @@ function Subscribe({setPanel, user, result}) {
 
 		setLoading(false)
 		if (status) {
+			if (!subscribeBatchNumber) {
+				setSubscribeBatchNumber(1);
+			} else {
+				setSubscribeBatchNumber(0);
+			}
 			api.setUser()
 			setPanel("Share")
 		}
@@ -79,7 +87,7 @@ function Subscribe({setPanel, user, result}) {
 			<Button
 				size="l"
 				onClick={async () => {
-					await showAds();
+					await showAds(false);
 					setPanel("Share")
 				}}
 				appearance="accent"
@@ -111,7 +119,7 @@ function Share({setPanel, result}) {
 			<Button
 				size="l"
 				onClick={async () => {
-					await showAds();
+					await showAds(false);
 					setPanel("History")
 				}}
 				appearance="accent"
@@ -178,9 +186,9 @@ function Result({result, setPanel, go}) {
 		</Button>
 		<Button
 			style={{marginTop: '10px'}}
-			onClick={async () => {
+			onClick={async (e) => {
+				go(e);
 				await showAds(false);
-				go();
 			}}
 			data-to="init"
 			size="l"
@@ -194,7 +202,7 @@ function Result({result, setPanel, go}) {
 
 const panels = {Subscribe, Share, History, Result, ErrorPanel}
 
-export default function Generate({id, photo, go, ava, user}) {
+export default function Generate({id, photo, go, ava, user, subscribeBatchNumber, setSubscribeBatchNumber}) {
 	const [loading, setLoading] = useState(true)
 	const [panel, setPanel] = useState(null)
 	const [result, setResult] = useState(null)
@@ -247,6 +255,13 @@ export default function Generate({id, photo, go, ava, user}) {
 	</>
 
 	return <Panel id={id}>
-		<ActivePanel setPanel={setPanel} result={result} user={user} go={go}/>
+		<ActivePanel
+			setPanel={setPanel}
+			subscribeBatchNumber={subscribeBatchNumber}
+			setSubscribeBatchNumber={setSubscribeBatchNumber}
+			result={result}
+			user={user}
+			go={go}
+		/>
 	</Panel>
 }

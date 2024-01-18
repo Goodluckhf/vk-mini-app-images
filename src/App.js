@@ -16,9 +16,10 @@ const App = () => {
 	const [activePanel, setActivePanel] = useState('init');
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
-	const [folders, setFolders] = useState(null) // Все папки с шаблонами
-	const [activePhoto, setActivePhoto] = useState(null) // Текущий выбранный шаблон для редактирования
-	const [ava, setAva] = useState(null) // Автарка пользователя для обработки 
+	const [folders, setFolders] = useState(null); // Все папки с шаблонами
+	const [activePhoto, setActivePhoto] = useState(null); // Текущий выбранный шаблон для редактирования
+	const [ava, setAva] = useState(null); // Автарка пользователя для обработки
+	const [subscribeBatchNumber, setSubscribeBatchNumber] = useState(0);
 
 	async function fetchData() {
 		const user = await bridge.send('VKWebAppGetUserInfo'); // Инициализация пользователя
@@ -57,6 +58,8 @@ const App = () => {
 										user={fetchedUser}
 										go={go}
 										ava={ava}
+										subscribeBatchNumber={subscribeBatchNumber}
+										setSubscribeBatchNumber={setSubscribeBatchNumber}
 									/>
 									<GetImage
 										id="get_image"
