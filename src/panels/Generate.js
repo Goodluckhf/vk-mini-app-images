@@ -45,7 +45,7 @@ function Subscribe({setPanel, user, result, subscribeBatchNumber, setSubscribeBa
 
 	if (user.data.extraGenerationAvailable) return <div className="InitMenu">
 		<Icon201CircleFillGold width={150} height={150} style={{marginBottom: '30px'}}/>
-		<h1>Подпишитесь на нас. Получите дополнительную генерацию.</h1>
+		<h1>Подпишитесь на нас. И получите дополнительную генерацию.</h1>
 		<ButtonGroup mode="vertical">
 			<Button
 				onClick={getPoints}
@@ -73,7 +73,7 @@ function Subscribe({setPanel, user, result, subscribeBatchNumber, setSubscribeBa
 
 	return <div className="InitMenu">
 		<img src={img1}/>
-		<h1>Подпишитесь на нас. Следите за новостями. Будьте в курсе всех событий.</h1>
+		<h1>Подпишитесь на нас. Будьте в курсе всех событий. Следите за новостями</h1>
 		<ButtonGroup mode="vertical" style={{minWidth: '250px'}}>
 			<Button
 				onClick={getPoints}
@@ -113,9 +113,9 @@ function Share({setPanel, result}) {
 
 	return <div className="InitMenu">
 		<Icon28Hearts2CircleFillTwilight width={150} height={150} style={{marginBottom: '30px'}}/>
-		<h1>Опубликуйте результат. Это возможность получить много лайков от друзей.</h1>
+		<h1>Поделитесь новым образом с друзьями. Это возможность получить много лайков</h1>
 		<ButtonGroup mode="vertical">
-			<Button size="l" className="DefaultButton" onClick={share}>Опубликовать результат</Button>
+			<Button size="l" className="DefaultButton" onClick={share}>Поделиться на стене</Button>
 			<Button
 				size="l"
 				onClick={async () => {
@@ -144,7 +144,7 @@ function History({setPanel, result}) {
 
 	return <div className="InitMenu">
 		<Icon28StoryCircleFillViolet width={150} height={150} style={{marginBottom: '30px'}}/>
-		<h1>Опубликуйте историю. Это возможность получить много реакций от друзей.</h1>
+		<h1>Поделитесь историей. Это возможность получить много реакций от друзей</h1>
 		<ButtonGroup mode="vertical">
 			<Button size="l" className="DefaultButton" onClick={share}>Опубликовать историю</Button>
 			<Button
@@ -175,7 +175,7 @@ function Result({result, setPanel, go}) {
 
 	return <div className="InitMenu">
 		<img src={result.result} style={{width: '250px'}}/>
-		<h1>Ваш результат готов. Не забудьте показать результат друзьям.</h1>
+		<h1>Ваш результат готов. Не забудьте поделиться новым образом с друзьями.</h1>
 
 		<Button
 			onClick={share}
@@ -249,7 +249,7 @@ export default function Generate({id, photo, go, ava, user, subscribeBatchNumber
 
 	if (loading) return <>
 		<div className="InitMenu">
-			<h1 class="loading-text" style={{marginBottom: '200px'}}>Идет обработка... Пожалуйста, подождите</h1>
+			<h1 class="loading-text" style={{marginBottom: '200px'}}>Пожалуйста, подождите. Идет создание вашего нового образа...</h1>
 			<ScreenSpinner/>
 		</div>
 	</>
