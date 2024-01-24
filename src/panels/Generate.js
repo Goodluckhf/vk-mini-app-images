@@ -39,6 +39,14 @@ function Subscribe({setPanel, user, result, subscribeBatchNumber, setSubscribeBa
 				setSubscribeBatchNumber(0);
 			}
 			api.setUser()
+			bridge.send('VKWebAppTrackEvent', {
+				event_name: 'subscribe',
+				user_id: user.id,
+			}).then((result) => {
+				console.log(`VKWebAppTrackEvent`, result);
+			}).catch((error) => {
+				console.error(`VKWebAppTrackEvent error`, error);
+			});
 			setPanel("Share")
 		}
 	}
@@ -233,6 +241,14 @@ export default function Generate({id, photo, go, ava, user, subscribeBatchNumber
 		const start = async () => {
 			try {
 				const id = await api.generate(ava, photo)
+				bridge.send('VKWebAppTrackEvent', {
+					event_name: 'lead',
+					user_id: user.id,
+				}).then((result) => {
+					console.log(`VKWebAppTrackEvent`, result);
+				}).catch((error) => {
+					console.error(`VKWebAppTrackEvent error`, error);
+				});
 				poll(id)
 				await showAds(false);
 			} catch (e) {
@@ -249,7 +265,8 @@ export default function Generate({id, photo, go, ava, user, subscribeBatchNumber
 
 	if (loading) return <>
 		<div className="InitMenu">
-			<h1 class="loading-text" style={{marginBottom: '200px'}}>Пожалуйста, подождите. Идет создание вашего нового образа...</h1>
+			<h1 class="loading-text" style={{marginBottom: '200px'}}>Пожалуйста, подождите. Идет создание вашего нового
+				образа...</h1>
 			<ScreenSpinner/>
 		</div>
 	</>
