@@ -4,6 +4,7 @@
     "scripts": {
         "start": "cross-env PORT=10888 HTTPS=true react-scripts start",
         "build": "react-scripts build",
+        "format": "prettier --write \"src/**/*.js\"",
         "predeploy": "npm run build",
         "deploy": "vk-miniapps-deploy",
         "tunnel": "vk-tunnel --insecure=1 --http-protocol=https --ws-protocol=wss --host=0.0.0.0 --port=10888",
@@ -35,7 +36,8 @@
         "babel-eslint": "^10.1.0",
         "cross-env": "^7.0.3",
         "react-hot-loader": "^4.13.0",
-        "react-scripts": "^5.0.1"
+        "react-scripts": "^5.0.1",
+        "prettier": "^3.0.0"
     },
     "resolutions": {
         "react-scripts/webpack-dev-server/yargs/yargs-parser": ">=18.1.2"
