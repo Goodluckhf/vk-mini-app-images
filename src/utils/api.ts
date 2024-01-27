@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { LimitError, UnknownError, FaceNotFound } from './exceptions';
+import { GenerationResultInterface } from '../store/generation-result-context';
+import { UserLimitInterface } from '../store/user-context';
 
 class API {
   baseURL = 'https://women-one-24.ru';
@@ -25,18 +27,43 @@ class API {
     return `${this.cdnUrl}/${path}`;
   }
 
+  mapResponseToGenerationResult(response: any): GenerationResultInterface {
+    return {
+      textPhoto: response.textphoto,
+      textCaption: response.textcaption,
+      photo: {
+        relativePath: response.result,
+        absolutePath: this.getImage(response.result),
+      },
+    };
+  }
+
   async getFolders(gen) {
     const sex = gen == 2 ? 'male' : 'female';
     const { data } = await axios.get(`face-swapper/base-images?sex=${sex}`);
     return data;
   }
 
-  async getUser() {
+  async getUserLimits(): Promise<{limits: UserLimitInterface, generationResult?: GenerationResultInterface}> {
     const { data } = await axios.get(`/face-swapper/limits`);
-    return data;
+
+    const result: {limits: UserLimitInterface, generationResult?: GenerationResultInterface} = {
+      limits: {
+        limit: data.limit,
+        extraGenerationAvailable: data.extraGenerationAvailable,
+        groupIds: data.groupIds,
+        subscribeBatchNumber: 0,
+      }
+    };
+
+    if (data.result) {
+      result.generationResult = this.mapResponseToGenerationResult(data);
+    }
+
+    return result;
   }
 
-  async setUser() {
+  async updateUserLimit() {
     await axios.put(`/face-swapper/limits`);
   }
 
@@ -45,7 +72,7 @@ class API {
     return data;
   }
 
-  async generate(img, photo) {
+  async generate(img, photo): Promise<string> {
     try {
       const form = new FormData();
       form.set('source', img, img.name);
@@ -63,10 +90,14 @@ class API {
     }
   }
 
-  async getResult(id) {
+  async getResult(id): Promise<string | GenerationResultInterface> {
     try {
       const { data } = await axios.get('face-swapper/result/' + id);
-      return data;
+      if (typeof data === 'string') {
+        return data;
+      }
+
+      return this.mapResponseToGenerationResult(data);
     } catch (e) {
       const status = e.response.status;
       const error = e?.response.data.error;

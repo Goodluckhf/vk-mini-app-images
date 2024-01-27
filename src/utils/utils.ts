@@ -1,9 +1,10 @@
 import bridge from '@vkontakte/vk-bridge';
 import api from './api';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 export async function getToken(scope) {
   return await bridge.send('VKWebAppGetAuthToken', {
+    // @ts-ignore
     app_id: window.process.APP_ID,
     scope: scope,
   });
@@ -21,12 +22,14 @@ export async function wallPost(text, photo) {
     });
 
     let album = await albums.response.items.find(
+      // @ts-ignore
       (x) => x.title === window.process.ALBUM,
     );
     if (!album) {
       const data = await bridge.send('VKWebAppCallAPIMethod', {
         method: 'photos.createAlbum',
         params: {
+          // @ts-ignore
           title: window.process.ALBUM,
           v: '5.131',
           access_token: token.access_token,
@@ -64,6 +67,7 @@ export async function wallPost(text, photo) {
     const photoAttachment = attachment.response[0];
     await bridge.send('VKWebAppShowWallPostBox', {
       message: text,
+      // @ts-ignore
       attachment: `photo${photoAttachment.owner_id}_${photoAttachment.id}`,
     });
   } catch (e) {
@@ -71,7 +75,7 @@ export async function wallPost(text, photo) {
   }
 }
 
-export async function shareHistory(photo) {
+export async function shareHistory(photo: string) {
   try {
     await bridge.send('VKWebAppShowStoryBox', {
       background_type: 'image',
@@ -79,6 +83,7 @@ export async function shareHistory(photo) {
       attachment: {
         text: 'go_to',
         type: 'url',
+        // @ts-ignore
         url: `https://vk.com/app${window.process.APP_ID}`,
       },
     });
@@ -87,7 +92,7 @@ export async function shareHistory(photo) {
   }
 }
 
-let lastAddTime = null;
+let lastAddTime: Moment | null = null;
 
 function isAddAvailable(throttle) {
   if (!throttle) {
@@ -109,6 +114,7 @@ export async function showAds(throttle = true) {
 
   try {
     await bridge.send('VKWebAppShowNativeAds', {
+      // @ts-ignore
       ad_format: 'interstitial',
     });
   } catch (e) {

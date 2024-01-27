@@ -15,6 +15,7 @@ class ErrorBoundary extends React.Component {
   }
 
   render() {
+    // @ts-ignore
     const { children } = this.props;
     return children;
   }

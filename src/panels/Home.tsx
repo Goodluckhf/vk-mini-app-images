@@ -10,15 +10,16 @@ import {
 import Masonry from 'react-masonry-component';
 import { showAds } from '../utils/utils';
 import api from '../utils/api';
-import { UserContext } from '../user-context';
+import { UserContext } from '../store/user-context';
+import { FolderInterface } from '../store/folder.interface';
 
 const MAX_COUNT = 10; // Количество фото которые будут загркжены/подгружены
 
 const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
-  const [activeFolder, setActiveFolder] = useState(folders[0]);
+  const [activeFolder, setActiveFolder] = useState<FolderInterface>(folders[0]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(UserContext);
+  const user = useContext(UserContext);
 
   const loadingTimeout = () => {
     setLoading(true);
@@ -28,57 +29,58 @@ const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
   };
 
   useEffect(() => {
-    loadingTimeout();
-  }, []);
+    if (!user || !user.photo_max_orig) {
+      go('get_image');
+      return;
+    }
+
+    if (!user?.limits.limit) {
+      // Если нет генерайци, отправляем пользователя на панель с ошибкой
+      go('limit');
+      return;
+    }
+  }, [user]);
   const getPhotos = async () => {
     await showAds(); // Показываем interstitial рекламу (5 сек), можно передать "reward" тогда будет загружена более дорогоая реклама (30с)
     loadingTimeout();
     setOffset(offset + MAX_COUNT); // Подгружаем еще фото с помощью смещения
   };
 
-  useEffect(() => {
-    if (!user.data.limit) {
-      // Если нет генерайци, отправляем пользователя на панель с ошибкой
-      go('limit');
-      return null;
-    }
-  }, [user]);
+  const photosBatch = activeFolder.photos.slice(0, offset + MAX_COUNT);
 
-  const childEllements = activeFolder.photos.map((photo, index) => {
-    if (index < offset + MAX_COUNT) {
-      let width = window.innerWidth / 2 - 10;
-      if (window.innerWidth > 450) {
-        width = window.innerWidth / 4 - 20;
-      }
-
-      return (
-        <div
-          key={photo.name}
-          onClick={() => {
-            fetch(user.photo_max_orig)
-              .then((res) => res.blob())
-              .then((blob) => {
-                setAva(blob);
-                setActivePhoto(photo);
-                go('generate');
-              });
-          }}
-        >
-          <img
-            style={{ width: width + 'px' }}
-            className="MainPhoto"
-            src={api.getImage(photo.name)}
-          />
-        </div>
-      );
+  const childElements = photosBatch.map((photo, index) => {
+    let width = window.innerWidth / 2 - 10;
+    if (window.innerWidth > 450) {
+      width = window.innerWidth / 4 - 20;
     }
+
+    return (
+      <div
+        key={photo.name}
+        onClick={() => {
+          fetch(user?.photo_max_orig as string)
+            .then((res) => res.blob())
+            .then((blob) => {
+              setAva(blob);
+              setActivePhoto(photo);
+              go('generate');
+            });
+        }}
+      >
+        <img
+          style={{ width: width + 'px' }}
+          className="MainPhoto"
+          src={api.getImage(photo.name)}
+        />
+      </div>
+    );
   });
 
   return (
     <Panel id={id} style={{ minHeight: '100vh' }}>
       <PanelHeader>{activeFolder.name}</PanelHeader>
-
-      <Masonry style={{ padding: '5px' }}>{childEllements}</Masonry>
+      {/* @ts-ignore */}
+      <Masonry style={{ padding: '5px' }}>{childElements}</Masonry>
 
       {activeFolder.photos.length > offset + MAX_COUNT ? (
         <div style={{ padding: '10px' }} hidden={loading}>
@@ -111,7 +113,9 @@ const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
                     size="l"
                     key={folder.path}
                     className={
-                      folder.name === activeFolder.name ? 'DefaultButton' : null
+                      folder.name === activeFolder.name
+                        ? 'DefaultButton'
+                        : undefined
                     }
                     onClick={() => {
                       loadingTimeout();

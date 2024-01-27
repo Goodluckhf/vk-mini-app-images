@@ -11,7 +11,7 @@
         "backend": "vk-tunnel --insecure=1 --http-protocol=http --ws-protocol=wss --host=0.0.0.0 --port=3000"
     },
     "engines": {
-        "node": ">=12.0.0"
+        "node": ">=18.0.0"
     },
     "keywords": [],
     "license": "MIT",
@@ -27,15 +27,16 @@
         "prop-types": "^15.7.2",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
-        "react-masonry-component": "^6.3.0",
-        "react-usestateref": "^1.0.8"
+        "react-masonry-component": "^6.3.0"
     },
     "devDependencies": {
-        "@vkontakte/vk-miniapps-deploy": "0.0.25",
+        "typescript": "^4.9.5",
+        "@types/react": "^17.0.75",
+        "@types/react-dom": "^17.0.25",
+        "@vkontakte/vk-miniapps-deploy": "^0.1.6",
         "@vkontakte/vk-tunnel": "^0.1.4",
-        "babel-eslint": "^10.1.0",
         "cross-env": "^7.0.3",
-        "react-hot-loader": "^4.13.0",
+        "react-hot-loader": "^4.13.1",
         "react-scripts": "^5.0.1",
         "prettier": "^3.0.0"
     },
