@@ -57,8 +57,9 @@ export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
             onSubscribe={onSubscribe}
             user={user as UserInterface}
             setUser={setUser}
+            stretched
           >
-            Подписаться +1 генерация
+            Получить +1 Образ
           </SubscribeButton>
         )}
 

@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import {UserContext, UserInterface} from '../../store/user-context';
+import { UserContext, UserInterface } from '../../store/user-context';
 import { Icon201CircleFillGold } from '@vkontakte/icons';
 import { Button, ButtonGroup } from '@vkontakte/vkui';
 import { showAds } from '../../utils/utils';
@@ -32,14 +32,14 @@ export const Subscribe = ({ setPanel, go }: SubscribeProps) => {
           height={150}
           style={{ marginBottom: '30px' }}
         />
-        <h1>Подпишитесь на нас. И получите дополнительную генерацию.</h1>
+        <h1>Подпишитесь на нас. И получите дополнительный образ</h1>
         <ButtonGroup mode="vertical">
           <SubscribeButton
             onSubscribe={onSubscribe}
             user={user}
             setUser={setUser}
           >
-            Подписаться +1 генерация
+            Получить +1 Образ
           </SubscribeButton>
           <Button
             size="l"

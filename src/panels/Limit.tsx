@@ -55,8 +55,9 @@ export default function Limit({ id, go }) {
               onSubscribe={onSubscribe}
               user={user as UserInterface}
               setUser={setUser}
+              stretched
             >
-              Подписаться +1 генерация
+              Получить +1 Образ
             </SubscribeButton>
           )}
           <Button
