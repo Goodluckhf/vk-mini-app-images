@@ -43,7 +43,7 @@ const App = () => {
 
   async function fetchData() {
     const user = await bridge.send('VKWebAppGetUserInfo'); // Инициализация пользователя
-    const fetchedFolders = await api.getFolders(user.sex); // Получаем папки
+    const fetchedFolders = await api.getFolders(user as UserInterface); // Получаем папки
     const limits = await api.getUserLimits(); // Получаем лимит
     if (limits.generationResult) {
       setGenerationResult(limits.generationResult);

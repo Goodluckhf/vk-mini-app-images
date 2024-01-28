@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { LimitError, UnknownError, FaceNotFound } from './exceptions';
 import { GenerationResultInterface } from '../store/generation-result-context';
-import { UserLimitInterface } from '../store/user-context';
+import { UserInterface, UserLimitInterface } from '../store/user-context';
 
 class API {
   baseURL = 'https://women-one-24.ru';
@@ -38,10 +38,35 @@ class API {
     };
   }
 
-  async getFolders(gen) {
-    const sex = gen == 2 ? 'male' : 'female';
+  mapVkSex(vkSex: number): string {
+    return vkSex === 2 ? 'male' : 'female';
+  }
+
+  async getFolders(user: UserInterface) {
+    const sex = this.mapVkSex(user.sex);
     const { data } = await axios.get(`face-swapper/base-images?sex=${sex}`);
+    const startAppPhotoURI = this.getStartPhotoURI(user);
+    if (startAppPhotoURI) {
+      const firstPhotoURI = data[0].photos[0].name;
+      if (firstPhotoURI !== startAppPhotoURI) {
+        data[0].photos = [{ name: startAppPhotoURI }, ...data[0].photos];
+      }
+    }
     return data;
+  }
+
+  getStartPhotoURI(user: UserInterface): string | null {
+    const appStartParams = new URLSearchParams(
+      window.location.hash.replace('#', ''),
+    );
+    const id = appStartParams.get('id');
+    const category = appStartParams.get('c');
+    const sex = this.mapVkSex(user.sex);
+    if (!id || !category) {
+      return null;
+    }
+
+    return `base-images/${category}/${sex}/${id}.jpeg`;
   }
 
   async getLimitsFromResponse(response: any): Promise<{
