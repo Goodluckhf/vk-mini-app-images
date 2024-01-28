@@ -19,7 +19,7 @@ const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
   const [activeFolder, setActiveFolder] = useState<FolderInterface>(folders[0]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const loadingTimeout = () => {
     setLoading(true);

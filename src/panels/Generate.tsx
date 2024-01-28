@@ -35,21 +35,14 @@ export interface GenerateProps {
   photo: FolderPhotoInterface;
   go: any;
   ava: Blob;
-  setSubscribeBatchNumber: Dispatch<SetStateAction<number>>;
 }
 
-export default function Generate({
-  id,
-  photo,
-  go,
-  ava,
-  setSubscribeBatchNumber,
-}: GenerateProps) {
+export default function Generate({ id, photo, go, ava }: GenerateProps) {
   const [panel, setPanel] = useState<string | null>(null);
   const { generationResult, setGenerationResult } = useContext(
     GenerationResultContext,
   );
-  const user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     if (!user) {
@@ -71,6 +64,17 @@ export default function Generate({
           ...generationResult,
           ...(job as GenerationResultInterface),
         });
+
+        if (user) {
+          setUser({
+            ...user,
+            limits: {
+              ...user.limits,
+              limit: user.limits.limit - 1,
+            },
+          });
+        }
+
         setPanel('Subscribe');
       } catch (e) {
         if (e instanceof FaceNotFound) {
@@ -125,7 +129,6 @@ export default function Generate({
     <Panel id={id}>
       <ActivePanel
         setPanel={setPanel}
-        setSubscribeBatchNumber={setSubscribeBatchNumber}
         go={go}
       />
     </Panel>

@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { UserInfo } from '@vkontakte/vk-bridge';
 
 export interface UserLimitInterface {
   limit: number;
-  extraGenerationAvailable: boolean;
   groupIds: number[];
-  subscribeBatchNumber: number;
 }
 
 export type UserInterface = UserInfo & {
   limits: UserLimitInterface;
 };
 
-export const UserContext = React.createContext<UserInterface | null>(null);
+export const UserContext = React.createContext<{
+  user: UserInterface | null;
+  setUser: Dispatch<SetStateAction<UserInterface | null>>;
+}>({
+  setUser: () => {},
+  user: null,
+});

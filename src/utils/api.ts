@@ -44,27 +44,43 @@ class API {
     return data;
   }
 
-  async getUserLimits(): Promise<{limits: UserLimitInterface, generationResult?: GenerationResultInterface}> {
-    const { data } = await axios.get(`/face-swapper/limits`);
-
-    const result: {limits: UserLimitInterface, generationResult?: GenerationResultInterface} = {
+  async getLimitsFromResponse(response: any): Promise<{
+    limits: UserLimitInterface;
+    generationResult?: GenerationResultInterface;
+  }> {
+    const result: {
+      limits: UserLimitInterface;
+      generationResult?: GenerationResultInterface;
+    } = {
       limits: {
-        limit: data.limit,
-        extraGenerationAvailable: data.extraGenerationAvailable,
-        groupIds: data.groupIds,
-        subscribeBatchNumber: 0,
-      }
+        limit: response.limit,
+        groupIds: response.groupIds,
+      },
     };
 
-    if (data.result) {
-      result.generationResult = this.mapResponseToGenerationResult(data);
+    if (response.result) {
+      result.generationResult = this.mapResponseToGenerationResult(response);
     }
-
     return result;
   }
 
-  async updateUserLimit() {
-    await axios.put(`/face-swapper/limits`);
+  async getUserLimits(): Promise<{
+    limits: UserLimitInterface;
+    generationResult?: GenerationResultInterface;
+  }> {
+    const { data } = await axios.get(`/face-swapper/limits`);
+    return this.getLimitsFromResponse(data);
+  }
+
+  async updateUserLimit(groupIds: number[]): Promise<{
+    limits: UserLimitInterface;
+    generationResult?: GenerationResultInterface;
+  }> {
+    const { data } = await axios.put(`/face-swapper/limits`, {
+      groupIds,
+    });
+
+    return this.getLimitsFromResponse(data);
   }
 
   async uploadPhoto(photo, uploadUrl) {

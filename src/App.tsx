@@ -38,7 +38,6 @@ const App = () => {
   const [folders, setFolders] = useState<FolderInterface[]>([]); // Все папки с шаблонами
   const [activePhoto, setActivePhoto] = useState<FolderPhotoInterface>(); // Текущий выбранный шаблон для редактирования
   const [ava, setAva] = useState<Blob>(); // Автарка пользователя для обработки
-  const [subscribeBatchNumber, setSubscribeBatchNumber] = useState(0);
   const [generationResult, setGenerationResult] =
     useState<GenerationResultInterface | null>(null);
 
@@ -52,7 +51,7 @@ const App = () => {
     setFolders(fetchedFolders);
     setUser({
       ...user,
-      limits: { ...limits.limits, subscribeBatchNumber },
+      limits: { ...limits.limits },
     });
     setPopout(null);
   }
@@ -66,7 +65,7 @@ const App = () => {
       <ConfigProvider>
         <AdaptivityProvider>
           <AppRoot>
-            <UserContext.Provider value={fetchedUser}>
+            <UserContext.Provider value={{ user: fetchedUser, setUser }}>
               <GenerationResultContext.Provider
                 value={{ generationResult, setGenerationResult }}
               >
@@ -87,7 +86,6 @@ const App = () => {
                         photo={activePhoto as FolderPhotoInterface}
                         go={go}
                         ava={ava as Blob}
-                        setSubscribeBatchNumber={setSubscribeBatchNumber}
                       />
                       <GetImage id="get_image" setAva={setAva} go={go} />
                       <ErrorPanel id="error_panel" go={go} />

@@ -1,12 +1,13 @@
 import { Button, ButtonGroup, Panel } from '@vkontakte/vkui';
-import { wallPost } from '../utils/utils';
+import { showAds, wallPost } from '../utils/utils';
 import { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../store/user-context';
+import { UserContext, UserInterface } from '../store/user-context';
 import { GenerationResultContext } from '../store/generation-result-context';
+import { SubscribeButton } from '../components/subscribe-button';
 
 export default function Limit({ id, go }) {
   const [loading, setLoading] = useState(false);
-  const user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { generationResult } = useContext(GenerationResultContext);
   useEffect(() => {
     if (!user || !generationResult) {
@@ -28,6 +29,15 @@ export default function Limit({ id, go }) {
     setLoading(false);
   };
 
+  const onSubscribe = async () => {
+    await showAds(false);
+    go('init');
+  };
+
+  const extraGenerationAvailable = Boolean(
+    (user?.limits.limit as number) <= 0 && user?.limits.groupIds.length,
+  );
+
   return (
     <Panel id={id} style={{ minHeight: '100vh' }}>
       <div className="InitMenu">
@@ -40,11 +50,21 @@ export default function Limit({ id, go }) {
           заходите завтра
         </h1>
         <ButtonGroup mode="vertical">
+          {extraGenerationAvailable && (
+            <SubscribeButton
+              onSubscribe={onSubscribe}
+              user={user as UserInterface}
+              setUser={setUser}
+            >
+              Подписаться +1 генерация
+            </SubscribeButton>
+          )}
           <Button
             size="l"
             loading={loading}
-            className="DefaultButton"
+            className={extraGenerationAvailable ? '' : 'DefaultButton'}
             onClick={SharePost}
+            stretched
           >
             Поделиться с друзьями
           </Button>
