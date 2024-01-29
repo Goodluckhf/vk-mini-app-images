@@ -42,16 +42,30 @@ class API {
     return vkSex === 2 ? 'male' : 'female';
   }
 
+  async addLinkPhotoToCategory(user: UserInterface, foldersResponse) {
+    const startAppPhotoURI = this.getStartPhotoURI(user);
+    if (!startAppPhotoURI) {
+      return;
+    }
+    const firstPhotoURI = foldersResponse[0].photos[0].name;
+    if (firstPhotoURI === startAppPhotoURI) {
+      return;
+    }
+    const firstPhotoResponse = await fetch(this.getImage(startAppPhotoURI));
+    if (firstPhotoResponse.status !== 200) {
+      return;
+    }
+
+    foldersResponse[0].photos = [
+      { name: startAppPhotoURI },
+      ...foldersResponse[0].photos,
+    ];
+  }
+
   async getFolders(user: UserInterface) {
     const sex = this.mapVkSex(user.sex);
     const { data } = await axios.get(`face-swapper/base-images?sex=${sex}`);
-    const startAppPhotoURI = this.getStartPhotoURI(user);
-    if (startAppPhotoURI) {
-      const firstPhotoURI = data[0].photos[0].name;
-      if (firstPhotoURI !== startAppPhotoURI) {
-        data[0].photos = [{ name: startAppPhotoURI }, ...data[0].photos];
-      }
-    }
+    await this.addLinkPhotoToCategory(user, data);
     return data;
   }
 
