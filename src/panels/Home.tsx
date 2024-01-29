@@ -39,6 +39,8 @@ const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
       go('limit');
       return;
     }
+
+    loadingTimeout();
   }, [user]);
   const getPhotos = async () => {
     await showAds(); // Показываем interstitial рекламу (5 сек), можно передать "reward" тогда будет загружена более дорогоая реклама (30с)
@@ -75,6 +77,7 @@ const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
       </div>
     );
   });
+  const hasMorPhotos = activeFolder.photos.length > offset + MAX_COUNT;
 
   return (
     <Panel id={id} style={{ minHeight: '100vh' }}>
@@ -82,7 +85,7 @@ const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
       {/* @ts-ignore */}
       <Masonry style={{ padding: '5px' }}>{childElements}</Masonry>
 
-      {activeFolder.photos.length > offset + MAX_COUNT ? (
+      {hasMorPhotos ? (
         <div style={{ padding: '10px' }} hidden={loading}>
           <Button
             className="DefaultButton"
