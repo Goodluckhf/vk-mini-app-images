@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext, UserInterface } from '../store/user-context';
 import { GenerationResultContext } from '../store/generation-result-context';
 import { SubscribeButton } from '../components/subscribe-button';
+import { EAdsFormats } from '@vkontakte/vk-bridge';
 
 export default function Limit({ id, go }) {
   const [loading, setLoading] = useState(false);
@@ -14,6 +15,12 @@ export default function Limit({ id, go }) {
       go('error_panel');
       return;
     }
+
+    if (!extraGenerationAvailable) {
+      setTimeout(() => {
+        showAds(false, EAdsFormats.REWARD);
+      }, 3000)
+    }
   }, [user, generationResult]);
 
   const SharePost = async () => {
@@ -23,6 +30,7 @@ export default function Limit({ id, go }) {
         generationResult?.textPhoto,
         generationResult?.photo.relativePath,
       );
+      await showAds(false, EAdsFormats.REWARD);
     } catch (e) {
       console.error(e);
     }

@@ -1,15 +1,23 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useLayoutEffect } from 'react';
 import { UserContext, UserInterface } from '../../store/user-context';
 import { Icon201CircleFillGold } from '@vkontakte/icons';
 import { Button, ButtonGroup } from '@vkontakte/vkui';
 import { showAds } from '../../utils/utils';
 import img1 from '../../img/subscribe.png';
 import { SubscribeButton } from '../../components/subscribe-button';
+import { EAdsFormats } from '@vkontakte/vk-bridge';
 
 export interface SubscribeProps {
   setPanel: (string) => void;
   go: (number) => void;
 }
+
+const showAdd = async (user: UserInterface, setPanel) => {
+  if (!user?.limits.groupIds.length) {
+    await showAds(false, EAdsFormats.REWARD);
+    setPanel('Share');
+  }
+};
 
 export const Subscribe = ({ setPanel, go }: SubscribeProps) => {
   const { user, setUser } = useContext(UserContext);
@@ -18,6 +26,14 @@ export const Subscribe = ({ setPanel, go }: SubscribeProps) => {
       go('error_panel');
       return;
     }
+  }, [user]);
+
+  useLayoutEffect(() => {
+    if (!user) {
+      setPanel('Share');
+      return;
+    }
+    showAdd(user, setPanel);
   }, [user]);
 
   const onSubscribe = () => {
@@ -75,7 +91,6 @@ export const Subscribe = ({ setPanel, go }: SubscribeProps) => {
         <Button
           size="l"
           onClick={async () => {
-            await showAds(false);
             setPanel('Share');
           }}
           appearance="accent"

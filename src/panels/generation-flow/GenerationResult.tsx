@@ -4,6 +4,7 @@ import React, { useContext, useEffect } from 'react';
 import { GenerationResultContext } from '../../store/generation-result-context';
 import { UserContext, UserInterface } from '../../store/user-context';
 import { SubscribeButton } from '../../components/subscribe-button';
+import { EAdsFormats } from '@vkontakte/vk-bridge';
 
 export interface GenerationResultProps {
   setPanel: (string) => void;
@@ -13,13 +14,21 @@ export interface GenerationResultProps {
 export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
   const { generationResult } = useContext(GenerationResultContext);
   const { user, setUser } = useContext(UserContext);
-
+  const extraGenerationAvailable = Boolean(
+    (user?.limits.limit as number) <= 0 && user?.limits.groupIds.length,
+  );
   useEffect(() => {
     if (!generationResult) {
       go('error_panel');
       return;
     }
-  }, [generationResult]);
+
+    if (Boolean(user?.limits.limit) && !extraGenerationAvailable) {
+      setTimeout(() => {
+        showAds(false, EAdsFormats.REWARD);
+      }, 3000);
+    }
+  }, [generationResult, user, extraGenerationAvailable]);
 
   const share = async () => {
     try {
@@ -37,10 +46,6 @@ export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
     await showAds(false);
     go('init');
   };
-
-  const extraGenerationAvailable = Boolean(
-    (user?.limits.limit as number) <= 0 && user?.limits.groupIds.length,
-  );
 
   return (
     <div className="InitMenu">

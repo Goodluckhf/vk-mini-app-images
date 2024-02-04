@@ -24,7 +24,11 @@ export const HistoryPublication = ({
 
   const share = async () => {
     try {
-      await shareHistory(generationResult?.photo.absolutePath as string);
+      await shareHistory(
+        generationResult?.photo.absolutePath as string,
+        generationResult?.basePhotoStartupLink || ''
+      );
+      await showAds(false);
       setPanel('GenerationResult');
     } catch (e) {
       console.error(e);

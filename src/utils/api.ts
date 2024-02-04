@@ -2,6 +2,11 @@ import axios from 'axios';
 import { LimitError, UnknownError, FaceNotFound } from './exceptions';
 import { GenerationResultInterface } from '../store/generation-result-context';
 import { UserInterface, UserLimitInterface } from '../store/user-context';
+import {
+  getStartupPhotoUrl,
+  getStartupSettings,
+  mapVkSex,
+} from './startup-settings';
 
 class API {
   baseURL = 'https://women-one-24.ru';
@@ -28,7 +33,7 @@ class API {
   }
 
   mapResponseToGenerationResult(response: any): GenerationResultInterface {
-    return {
+    const generationResult: GenerationResultInterface = {
       textPhoto: response.textphoto,
       textCaption: response.textcaption,
       photo: {
@@ -36,10 +41,23 @@ class API {
         absolutePath: this.getImage(response.result),
       },
     };
-  }
 
-  mapVkSex(vkSex: number): string {
-    return vkSex === 2 ? 'male' : 'female';
+    if (response.basePhoto) {
+      generationResult.basePhoto = response.basePhoto;
+      const { category, photoId } = response.basePhoto;
+      // @ts-ignore
+      generationResult.basePhotoStartupLink = `https://vk.com/app${window.process.APP_ID}#c=${category}&id=${photoId}`;
+      generationResult.textPhoto = generationResult.textPhoto.replace(
+        /https:\/\/vk\.com\/app[0-9]{7,11}$/,
+        generationResult.basePhotoStartupLink,
+      );
+      generationResult.textCaption = generationResult.textCaption.replace(
+        /https:\/\/vk\.com\/app[0-9]{7,11}$/,
+        generationResult.basePhotoStartupLink,
+      );
+    }
+
+    return generationResult;
   }
 
   async addLinkPhotoToCategory(user: UserInterface, foldersResponse) {
@@ -63,24 +81,15 @@ class API {
   }
 
   async getFolders(user: UserInterface) {
-    const sex = this.mapVkSex(user.sex);
+    const sex = mapVkSex(user.sex);
     const { data } = await axios.get(`face-swapper/base-images?sex=${sex}`);
     await this.addLinkPhotoToCategory(user, data);
     return data;
   }
 
   getStartPhotoURI(user: UserInterface): string | null {
-    const appStartParams = new URLSearchParams(
-      window.location.hash.replace('#', ''),
-    );
-    const id = appStartParams.get('id');
-    const category = appStartParams.get('c');
-    const sex = this.mapVkSex(user.sex);
-    if (!id || !category) {
-      return null;
-    }
-
-    return `base-images/${category}/${sex}/${id}.jpeg`;
+    const startupSettings = getStartupSettings(user);
+    return getStartupPhotoUrl(startupSettings);
   }
 
   async getLimitsFromResponse(response: any): Promise<{

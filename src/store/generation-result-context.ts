@@ -7,6 +7,14 @@ export interface GenerationResultInterface {
     relativePath: string;
     absolutePath: string;
   };
+  basePhoto?: {
+    category: string;
+    sex: string;
+    photoId: string;
+    extension: string;
+  };
+
+  basePhotoStartupLink?: string;
 }
 
 export const GenerationResultContext = React.createContext<{

@@ -1,4 +1,4 @@
-import bridge from '@vkontakte/vk-bridge';
+import bridge, { EAdsFormats } from '@vkontakte/vk-bridge';
 import api from './api';
 import moment, { Moment } from 'moment';
 
@@ -75,7 +75,7 @@ export async function wallPost(text, photo) {
   }
 }
 
-export async function shareHistory(photo: string) {
+export async function shareHistory(photo: string, appUrl: string) {
   try {
     await bridge.send('VKWebAppShowStoryBox', {
       background_type: 'image',
@@ -83,8 +83,7 @@ export async function shareHistory(photo: string) {
       attachment: {
         text: 'go_to',
         type: 'url',
-        // @ts-ignore
-        url: `https://vk.com/app${window.process.APP_ID}`,
+        url: appUrl
       },
     });
   } catch (e) {
@@ -107,15 +106,24 @@ function isAddAvailable(throttle) {
   return availableAddTime.isAfter(lastAddTime);
 }
 
-export async function showAds(throttle = true) {
+export async function showAds(
+  throttle = true,
+  adFormat: EAdsFormats = EAdsFormats.INTERSTITIAL,
+) {
   if (!isAddAvailable(throttle)) {
     return;
   }
 
   try {
+    if (adFormat === EAdsFormats.REWARD) {
+      await bridge.send('VKWebAppCheckNativeAds', {
+        ad_format: adFormat
+      })
+    }
+    
     await bridge.send('VKWebAppShowNativeAds', {
       // @ts-ignore
-      ad_format: 'interstitial',
+      ad_format: adFormat,
     });
   } catch (e) {
     console.error(e);

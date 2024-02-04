@@ -24,6 +24,7 @@ export const Share = ({ setPanel, go }: ShareProps) => {
         generationResult?.textPhoto,
         generationResult?.photo.relativePath,
       );
+      await showAds(false);
       setPanel('HistoryPublication');
     } catch (e) {
       console.error(e);
