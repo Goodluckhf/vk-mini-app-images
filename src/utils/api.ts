@@ -1,4 +1,5 @@
 import axios from 'axios';
+import bridge from '@vkontakte/vk-bridge';
 import { LimitError, UnknownError, FaceNotFound } from './exceptions';
 import { GenerationResultInterface } from '../store/generation-result-context';
 import { UserInterface, UserLimitInterface } from '../store/user-context';
@@ -124,8 +125,13 @@ class API {
     limits: UserLimitInterface;
     generationResult?: GenerationResultInterface;
   }> {
+    const { sign, ts } = await bridge.send('VKWebAppCreateHash', {
+      payload: `groupIds=${groupIds}`,
+    });
     const { data } = await axios.put(`/face-swapper/limits`, {
       groupIds,
+      sign,
+      ts
     });
 
     return this.getLimitsFromResponse(data);
