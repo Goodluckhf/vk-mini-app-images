@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import bridge from '@vkontakte/vk-bridge';
 import App from './App';
 
+const runApplicationParams = new URLSearchParams(window.location.search);
+
 window.process = {
-  APP_ID: 51816462, // ID приложения
+  APP_ID: Number(runApplicationParams.get('vk_app_id')), // ID приложения
   ALBUM: 'Мой Образ', // Название альбома который будется создавться дл япубликации фото,
 };
 
