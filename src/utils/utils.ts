@@ -83,7 +83,7 @@ export async function shareHistory(photo: string, appUrl: string) {
       attachment: {
         text: 'go_to',
         type: 'url',
-        url: appUrl
+        url: appUrl,
       },
     });
   } catch (e) {
@@ -117,10 +117,10 @@ export async function showAds(
   try {
     if (adFormat === EAdsFormats.REWARD) {
       await bridge.send('VKWebAppCheckNativeAds', {
-        ad_format: adFormat
-      })
+        ad_format: adFormat,
+      });
     }
-    
+
     await bridge.send('VKWebAppShowNativeAds', {
       // @ts-ignore
       ad_format: adFormat,

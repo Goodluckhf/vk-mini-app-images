@@ -131,7 +131,7 @@ class API {
     const { data } = await axios.put(`/face-swapper/limits`, {
       groupIds,
       sign,
-      ts
+      ts,
     });
 
     return this.getLimitsFromResponse(data);
