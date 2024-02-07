@@ -28,7 +28,7 @@ export const HistoryPublication = ({
         generationResult?.photo.absolutePath as string,
         generationResult?.basePhotoStartupLink || ''
       );
-      await showAds(false);
+      await showAds();
       setPanel('GenerationResult');
     } catch (e) {
       console.error(e);
@@ -52,7 +52,7 @@ export const HistoryPublication = ({
         <Button
           size="l"
           onClick={async () => {
-            await showAds(false);
+            await showAds();
             setPanel('GenerationResult');
           }}
           appearance="accent"

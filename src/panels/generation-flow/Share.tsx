@@ -24,7 +24,7 @@ export const Share = ({ setPanel, go }: ShareProps) => {
         generationResult?.textPhoto,
         generationResult?.photo.relativePath,
       );
-      await showAds(false);
+      await showAds();
       setPanel('HistoryPublication');
     } catch (e) {
       console.error(e);
@@ -49,7 +49,7 @@ export const Share = ({ setPanel, go }: ShareProps) => {
         <Button
           size="l"
           onClick={async () => {
-            await showAds(false);
+            await showAds();
             setPanel('HistoryPublication');
           }}
           appearance="accent"

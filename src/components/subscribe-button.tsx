@@ -28,7 +28,7 @@ export const SubscribeButton = ({
     setLoading(true);
     const groups = user.limits.groupIds.slice(0, SUBSCRIBE_BATCH_SIZE);
     if (!groups.length) {
-      await showAds(false);
+      await showAds();
       onSubscribe();
       return;
     }

@@ -14,7 +14,7 @@ export interface SubscribeProps {
 
 const showAdd = async (user: UserInterface, setPanel) => {
   if (!user?.limits.groupIds.length) {
-    await showAds(false, EAdsFormats.REWARD);
+    await showAds();
     setPanel('Share');
   }
 };
@@ -36,7 +36,8 @@ export const Subscribe = ({ setPanel, go }: SubscribeProps) => {
     showAdd(user, setPanel);
   }, [user]);
 
-  const onSubscribe = () => {
+  const onSubscribe = async () => {
+    await showAds();
     setPanel('Share');
   };
 
@@ -60,7 +61,7 @@ export const Subscribe = ({ setPanel, go }: SubscribeProps) => {
           <Button
             size="l"
             onClick={async () => {
-              await showAds(false);
+              await showAds();
               setPanel('Share');
             }}
             appearance="accent"

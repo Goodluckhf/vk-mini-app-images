@@ -22,13 +22,7 @@ export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
       go('error_panel');
       return;
     }
-
-    if (Boolean(user?.limits.limit) && !extraGenerationAvailable) {
-      setTimeout(() => {
-        showAds(false, EAdsFormats.REWARD);
-      }, 3000);
-    }
-  }, [generationResult, user, extraGenerationAvailable]);
+  }, [generationResult]);
 
   const share = async () => {
     try {
@@ -43,7 +37,7 @@ export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
   };
 
   const onSubscribe = async () => {
-    await showAds(false);
+    await showAds();
     go('init');
   };
 
@@ -84,7 +78,7 @@ export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
             style={{ marginTop: '10px' }}
             onClick={async (e) => {
               go(e);
-              await showAds(false);
+              await showAds();
             }}
             data-to="init"
             size="l"

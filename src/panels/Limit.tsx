@@ -15,12 +15,6 @@ export default function Limit({ id, go }) {
       go('error_panel');
       return;
     }
-
-    if (!extraGenerationAvailable) {
-      setTimeout(() => {
-        showAds(false, EAdsFormats.REWARD);
-      }, 3000);
-    }
   }, [user, generationResult]);
 
   const SharePost = async () => {
@@ -30,7 +24,6 @@ export default function Limit({ id, go }) {
         generationResult?.textPhoto,
         generationResult?.photo.relativePath,
       );
-      await showAds(false, EAdsFormats.REWARD);
     } catch (e) {
       console.error(e);
     }
@@ -38,7 +31,7 @@ export default function Limit({ id, go }) {
   };
 
   const onSubscribe = async () => {
-    await showAds(false);
+    await showAds();
     go('init');
   };
 

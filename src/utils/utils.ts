@@ -102,7 +102,7 @@ function isAddAvailable(throttle) {
     return true;
   }
 
-  const availableAddTime = moment().subtract(5, 'second');
+  const availableAddTime = moment().subtract(20, 'second');
   return availableAddTime.isAfter(lastAddTime);
 }
 

@@ -120,8 +120,9 @@ const Home = ({ id, go, folders, setActivePhoto, setAva }) => {
                         ? 'DefaultButton'
                         : undefined
                     }
-                    onClick={() => {
+                    onClick={async () => {
                       loadingTimeout();
+                      await showAds();
                       setOffset(0);
                       setActiveFolder(folder);
                     }}

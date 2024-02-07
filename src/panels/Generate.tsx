@@ -101,7 +101,7 @@ export default function Generate({ id, photo, go, ava }: GenerateProps) {
             console.error(`VKWebAppTrackEvent error`, error);
           });
         poll(id);
-        await showAds(false);
+        await showAds();
       } catch (e) {
         if (e instanceof LimitError) {
           go('limit');
