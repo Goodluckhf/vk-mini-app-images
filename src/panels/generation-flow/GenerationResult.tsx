@@ -54,7 +54,10 @@ export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
         style={{ width: '250px' }}
       />
       <h1>
-        Ваш результат готов. Не забудьте поделиться новым образом с друзьями.
+        Ваш результат готов.{' '}
+        {extraGenerationAvailable
+          ? 'Подпишитесь на нас и следите за обновлением приложения'
+          : 'Не забудьте поделиться новым образом с друзьями.'}
       </h1>
       <ButtonGroup mode="vertical">
         {extraGenerationAvailable && (
@@ -64,7 +67,7 @@ export const GenerationResult = ({ setPanel, go }: GenerationResultProps) => {
             setUser={setUser}
             stretched
           >
-            Получить +1 Образ
+            Подписаться
           </SubscribeButton>
         )}
 

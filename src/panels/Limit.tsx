@@ -19,7 +19,7 @@ export default function Limit({ id, go }) {
     if (!extraGenerationAvailable) {
       setTimeout(() => {
         showAds(false, EAdsFormats.REWARD);
-      }, 3000)
+      }, 3000);
     }
   }, [user, generationResult]);
 
@@ -54,8 +54,10 @@ export default function Limit({ id, go }) {
           style={{ width: '250px' }}
         />
         <h1>
-          К сожалению, на сегодня ваш лимит на образы исчерпан. Пожалуйста,
-          заходите завтра
+          К сожалению, на сегодня ваш лимит на образы исчерпан.{' '}
+          {extraGenerationAvailable
+            ? 'Подпишитесь на нас и следите за обновлениями'
+            : 'Пожалуйста, заходите завтра'}
         </h1>
         <ButtonGroup mode="vertical">
           {extraGenerationAvailable && (
@@ -65,7 +67,7 @@ export default function Limit({ id, go }) {
               setUser={setUser}
               stretched
             >
-              Получить +1 Образ
+              Подписаться
             </SubscribeButton>
           )}
           <Button

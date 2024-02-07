@@ -48,14 +48,14 @@ export const Subscribe = ({ setPanel, go }: SubscribeProps) => {
           height={150}
           style={{ marginBottom: '30px' }}
         />
-        <h1>Подпишитесь на нас. И получите дополнительный образ</h1>
+        <h1>Подпишитесь на нас. Будьте в курсе наших обновлений</h1>
         <ButtonGroup mode="vertical">
           <SubscribeButton
             onSubscribe={onSubscribe}
             user={user}
             setUser={setUser}
           >
-            Получить +1 Образ
+            Подписаться
           </SubscribeButton>
           <Button
             size="l"
